@@ -7,7 +7,10 @@ const Home = () => {
     return (
         <div>
             <Banner></Banner>
-            <HotJobs></HotJobs> 
+            <div>
+                <p className='text-center text-4xl font-bold mb-5 mt-5'>Hot Job Offers!!!</p>
+                <HotJobs></HotJobs>
+            </div> 
         </div>
     );
 };
