@@ -9,6 +9,7 @@ import Error from "../Shared/Error";
 import JobDetails from "../Pages/JobDetails";
 import PrivateRoute from "./PrivateRoute";
 import JobApply from "../Pages/JobApply";
+import MyApplications from "../Pages/MyApplications";
 const router = createBrowserRouter([
   {
     path: "/",
@@ -28,6 +29,10 @@ const router = createBrowserRouter([
         {
             path:'/jobapply/:id',
             element:<PrivateRoute><JobApply></JobApply></PrivateRoute>,
+        },
+        {
+          path:'/myapplications',
+          element:<PrivateRoute><MyApplications></MyApplications></PrivateRoute>,
         },
         {
             path:'/register',
