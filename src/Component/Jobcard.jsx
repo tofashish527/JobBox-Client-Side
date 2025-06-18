@@ -26,7 +26,14 @@ const Jobcard = ({job}) => {
     <p>{description}</p>
     <p className='font-semibold'>Requirements: {requirements.join(', ')}</p>
     <div className='font-bold flex'>
-         <p>Salary: ${salaryRange.min.toLocaleString()} - ${salaryRange.max.toLocaleString()}</p>
+      <p>
+  Salary: 
+  {salaryRange?.min != null && salaryRange?.max != null
+    ? `${salaryRange?.currency || ''} ${Number(salaryRange.min).toLocaleString()} - ${Number(salaryRange.max).toLocaleString()}`
+    : 'Not specified'}
+</p>
+
+         {/* <p>Salary: ${salaryRange.min.toLocaleString()} - ${salaryRange.max.toLocaleString()}</p> */}
          <NavLink to={`/jobs/${_id}`} className='btn'>Show Details</NavLink>
     </div>
   </div>

@@ -2,7 +2,7 @@ import React, { Suspense } from 'react';
 import ApplicationStat from '../Component/ApplicationStat';
 import ApplicationList from '../Component/ApplicationList';
 import useAuth from '../hooks/useAuth';
-import { myApplicationsPromise } from '../ApplicationsApi';
+import { myApplicationsPromise } from '../API/ApplicationsApi';
 
 
 const MyApplications = () => {

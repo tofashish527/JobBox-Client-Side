@@ -3,9 +3,13 @@ import React, { use } from 'react';
 import registerLottie from './../assets/lottifiles/Register-lottiJSON'
 import { AuthContext } from '../Context/AuthContext';
 import SocialLogin from '../Component/SocialLogin';
+import { useLocation, useNavigate } from 'react-router';
 
 const Register = () => {
   const {createUser}=use(AuthContext);
+  const location=useLocation();
+    const navigate=useNavigate();
+    const from=location.state||'/';
     const handleRegister=e=>{
         e.preventDefault();
         const form=e.target;
@@ -17,6 +21,7 @@ const Register = () => {
       createUser(email, password)
         .then((result) => {
           console.log(result.user);
+           navigate(from);
           //setLoading(false)
         })
         .catch((error) => {
