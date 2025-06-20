@@ -1,165 +1,141 @@
+
 import React from 'react';
 import useAuth from '../hooks/useAuth';
 import axios from 'axios';
 import Swal from 'sweetalert2';
 
 const AddJob = () => {
-    const {user}=useAuth()
-    const handleAddJob=e=>{
-        e.preventDefault();
-        const form=e.target;
-        const formdata=new FormData(form)
-        //console.log(formdata)
-        const data=Object.fromEntries(formdata.entries());
-        console.log(data)
+  const { user } = useAuth();
 
-        //process salary range
-        const {max,min,currency, ...newJob}=data;
-        newJob.salaryRange = {
-  min: Number(min),
-  max: Number(max),
-  currency
-};
+  const handleAddJob = e => {
+    e.preventDefault();
+    const form = e.target;
+    const formdata = new FormData(form);
+    const data = Object.fromEntries(formdata.entries());
 
-        //const {max,min,currency, ...newJob}=data;
-        //newJob.salaryRange={max,min,currency}
+    const { max, min, currency, ...newJob } = data;
 
-        //process requirements
-        const requirementsString=newJob.requirements;
-        const requirementsMessy=requirementsString.split(',')
-        const requirementsClean=requirementsMessy.map(req=>req.trim());
-        newJob.requirements=requirementsClean;
+    newJob.salaryRange = {
+      min: Number(min),
+      max: Number(max),
+      currency
+    };
 
-        newJob.responsibilities=newJob.responsibilities.split(',').map(res=>res.trim())
+    newJob.requirements = newJob.requirements.split(',').map(req => req.trim());
+    newJob.responsibilities = newJob.responsibilities.split(',').map(res => res.trim());
+    newJob.status = "active";
 
-        newJob.status="active";
+    axios.post('http://localhost:3000/jobs', newJob)
+      .then(res => {
+        if (res.data.insertedId) {
+          Swal.fire({
+            position: "top-end",
+            icon: "success",
+            title: "Job added successfully!",
+            showConfirmButton: false,
+            timer: 1500
+          });
+          form.reset();
+        }
+      })
+      .catch(console.log);
+  };
 
-        console.log(newJob)
+  return (
+    <div className="max-w-4xl mx-auto p-6 bg-indigo-50 mb-10 rounded-xl shadow-md mt-6">
+      <h1 className="text-3xl font-bold mb-6 text-center">Add a New Job</h1>
 
-        //save job to the database
-        axios.post('http://localhost:3000/jobs',newJob)
-        .then(res=>{
-            console.log(res);
-            if(res.data.insertedId)
-            {
-                Swal.fire({
-  position: "top-end",
-  icon: "success",
-  title: "Your work has been saved",
-  showConfirmButton: false,
-  timer: 1500
-});
-            }
-        })
-        .catch(error=>{
-            console.log(error);
-        })
-    }
-    return (
-        <div>
-            <h1 className='text-2xl font-semibold mt-3 mb-3'>Add Job Form Info:</h1>
-            <form action="" className='bg-blue-100 rounded-2xl' onSubmit={handleAddJob}>
-                <fieldset className="fieldset bg-blue-100 border-base-300 rounded-box w-full border p-4">
-                    <legend className="fieldset-legend text-xl">Basic details</legend>
+      <form onSubmit={handleAddJob} className="space-y-6">
+        {/* Basic Info */}
+        <fieldset className="border rounded-md p-4">
+          <legend className="text-lg font-semibold mb-2">Basic Information</legend>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <input type="text" name="title" placeholder="Job Title" className="input input-bordered w-full" required />
+            <input type="text" name="company" placeholder="Company Name" className="input input-bordered w-full" required />
+            <input type="text" name="location" placeholder="Company Location" className="input input-bordered w-full" />
+            <input type="text" name="companylogourl" placeholder="Company Logo URL" className="input input-bordered w-full" />
+          </div>
+        </fieldset>
 
-                    <label className="label text-lg">Title</label>
-                    <input type="text" name='title' className="input  w-full" placeholder="Job Title" />
+        {/* Job Type */}
+        <fieldset className="border rounded-md p-4">
+          <legend className="text-lg font-semibold mb-2">Job Type</legend>
+          <div className="flex gap-3">
+            {['On-site', 'Remote', 'Hybrid'].map(type => (
+              <label key={type} className="flex items-center gap-1">
+                <input type="radio" name="jobtype" value={type} required />
+                {type}
+              </label>
+            ))}
+          </div>
+        </fieldset>
 
-                    <label className="label text-lg">Company</label>
-                    <input type="text" name='company' className="input  w-full" placeholder="Company Name" />
+        {/* Job Category */}
+        <fieldset className="border rounded-md p-4">
+          <legend className="text-lg font-semibold mb-2">Category</legend>
+          <select name="category" defaultValue="" className="select w-full" required>
+            <option value="" disabled>Select a category</option>
+            <option>Engineering</option>
+            <option>Sales</option>
+            <option>Marketing</option>
+          </select>
+        </fieldset>
 
-                    <label className="label text-lg">Company Location</label>
-                    <input type="text" name='location' className="input w-full" placeholder="Company Location" />
+        {/* Deadline */}
+        <fieldset className="border rounded-md p-4">
+          <legend className="text-lg font-semibold mb-2">Application Deadline</legend>
+          <input type="date" name="deadline" className="input input-bordered w-full" required />
+        </fieldset>
 
-                    <label className="label text-lg">Company Logo</label>
-                    <input type="text" name='companylogourl' className="input w-full" placeholder="Company Logo URL" />
-                </fieldset>
-                {/* Job Type  */}
-                <fieldset className="fieldset bg-blue-100 border-base-300 rounded-box w-full border p-4">
-                    <legend className="fieldset-legend text-lg">Job Type</legend>
-                    <div className="filter">
-                        <input className="btn filter-reset" type="radio" name="jobtype" aria-label="All" />
-                        <input className="btn" type="radio" name="jobtype" aria-label="On-site" />
-                        <input className="btn" type="radio" name="jobtype" aria-label="Remote" />
-                        <input className="btn" type="radio" name="jobtype" aria-label="Hybrid" />
-                    </div>
+        {/* Salary Range */}
+        <fieldset className="border rounded-md p-4">
+          <legend className="text-lg font-semibold mb-2">Salary Range</legend>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <input type="number" name="min" placeholder="Min Salary" className="input input-bordered w-full" required />
+            <input type="number" name="max" placeholder="Max Salary" className="input input-bordered w-full" required />
+            <select name="currency" defaultValue="" className="select w-full" required>
+              <option value="" disabled>Select currency</option>
+              <option>BDT</option>
+              <option>USD</option>
+              <option>EUR</option>
+            </select>
+          </div>
+        </fieldset>
 
-                </fieldset>
+        {/* Description */}
+        <fieldset className="border rounded-md p-4">
+          <legend className="text-lg font-semibold mb-2">Description</legend>
+          <textarea name="description" className="textarea textarea-bordered w-full" placeholder="Job description" rows={4} required />
+        </fieldset>
 
-                {/* Job Category */}
-                <fieldset className="fieldset bg-blue-100 border-base-300 rounded-box w-full border p-4">
-                    <legend className="fieldset-legend text-lg">Job Category</legend>
-                    <select defaultValue="Pick your choice" name='category' className="select w-full">
-                        <option disabled={true}>Pick one</option>
-                        <option>Enginerring</option>
-                        <option>Sales</option>
-                        <option>Marketing</option>
-                    </select>
-                </fieldset>
+        {/* Requirements */}
+        <fieldset className="border rounded-md p-4">
+          <legend className="text-lg font-semibold mb-2">Requirements</legend>
+          <textarea name="requirements" className="textarea textarea-bordered w-full" placeholder="Comma-separated skills or qualifications" rows={3} required />
+        </fieldset>
 
-                {/* Job Application deadline  */}
-                <fieldset className="fieldset bg-blue-100 border-base-300 rounded-box w-full border p-4">
-                    <legend className="fieldset-legend text-lg">Application deadline</legend>
-                    <input type="date" name='deadline' className="input w-full" />
-                </fieldset>
+        {/* Responsibilities */}
+        <fieldset className="border rounded-md p-4">
+          <legend className="text-lg font-semibold mb-2">Responsibilities</legend>
+          <textarea name="responsibilities" className="textarea textarea-bordered w-full" placeholder="Comma-separated responsibilities" rows={3} required />
+        </fieldset>
 
-                {/* Job Salary Range  */}
-                <fieldset className="fieldset bg-blue-100 border-base-300 rounded-box w-full border p-4">
-                    <legend className="fieldset-legend text-lg">Salary Range</legend>
-                     <div className='grid lg:grid-cols-3 md:grid-cols-3 sm:grid-cols-1 space-x-2'> 
-                        <div className='flex flex-col'> 
-                         <label className="label text-sm font-semibold mb-1">Maximum salary</label>
-                    <input type="text" name='max' className="input" placeholder="Max-salary" />
-                        </div>
-                        <div className='flex flex-col'>  
-                    <label className="label text-sm font-semibold mb-1">Minimum salary</label>
-                    <input type="text" name='min' className="input" placeholder="Min-salary" />
-                        </div>
-                        <div className='flex flex-col'>
-                       <label className="label text-sm font-semibold mb-1">Currency</label>
-                    <select defaultValue="Pick your choice" name='currency' className="select">
-                        <option disabled={true}>Pick one</option>
-                        <option>BDT</option>
-                        <option>USD</option>
-                        <option>EU</option>
-                    </select>
-                        </div>
-                     </div>
-                </fieldset>
+        {/* HR Info */}
+        <fieldset className="border rounded-md p-4">
+          <legend className="text-lg font-semibold mb-2">HR Contact Info</legend>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <input type="text" name="HRname" placeholder="HR Name" className="input input-bordered w-full" required />
+            <input type="email" name="HRemail" defaultValue={user.email} placeholder="HR Email" className="input input-bordered w-full" readOnly />
+          </div>
+        </fieldset>
 
-                {/* Job Description */}
-                <fieldset className="fieldset bg-blue-100 border-base-300 rounded-box w-full border p-4">
-                    <legend className="fieldset-legend text-lg">Job description</legend>
-                     <textarea name='description' className="textarea w-full" placeholder="Job description"></textarea>
-                </fieldset>
-
-                 {/* Job Requirements */}
-                <fieldset className="fieldset bg-blue-100 border-base-300 rounded-box w-full border p-4">
-                    <legend className="fieldset-legend text-lg">Job requirements</legend>
-                     <textarea name='requirements' className="textarea w-full" placeholder="Job Requirements(separated with comma)"></textarea>
-                </fieldset>
-
-                 {/* Job Responsibilities */}
-                <fieldset className="fieldset bg-blue-100 border-base-300 rounded-box w-full border p-4">
-                    <legend className="fieldset-legend text-lg">Job responsibilities</legend>
-                     <textarea name='responsibilities' className="textarea w-full" placeholder="Job responsibilities"></textarea>
-                </fieldset>
-
-                {/* HR Info  */}
-                 <fieldset className="fieldset bg-blue-100 border-base-300 rounded-box w-full border p-4">
-                    <legend className="fieldset-legend text-lg">HR details</legend>
-
-                    <label className="label text-sm font-semibold">HR Name</label>
-                    <input type="text" name='HRname' className="input w-full" placeholder="HR Name" />
-
-                    <label className="label text-sm font-semibold">HR E-mail</label>
-                    <input type="text" name='HRemail' defaultValue={user.email} className="input w-full" placeholder="HR E-mail" />
-                </fieldset>
-
-                <input type="submit" value="ADD JOB" className='btn m-5 mx-auto w-full ' />
-            </form>
+        {/* Submit */}
+        <div className="text-center">
+          <input type="submit" value="Add Job" className="btn btn-primary w-full md:w-1/2 mt-4" />
         </div>
-    );
+      </form>
+    </div>
+  );
 };
 
 export default AddJob;

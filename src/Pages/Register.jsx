@@ -43,6 +43,12 @@ const Register = () => {
           <input type="email" className="input" name='email' placeholder="Email" />
           <label className="label">Password</label>
           <input type="password" className="input" name='password' placeholder="Password" />
+          {/* <select name="role" defaultValue="" className="select" required>
+            <option value="" disabled>choose your role</option>
+  <option value="applicant">Applicant</option>
+  <option value="recruiter">Recruiter</option>
+</select> */}
+
           <button className="btn btn-neutral mt-4">Register</button>
         </fieldset>
         </form>

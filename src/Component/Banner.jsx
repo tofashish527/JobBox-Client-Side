@@ -4,7 +4,7 @@ import team1 from './../assets/BannerImg/team-1.jpg'
 import team2 from './../assets/BannerImg/team-2.jpg'
 const Banner = () => {
     return (
-        <div className="hero bg-base-200 min-h-screen mb-5">
+        <div className="hero bg-blue-100 min-h-screen mb-5">
   <div className="hero-content flex-col lg:flex-row-reverse">
     <div className='flex-1'>
         <motion.img
@@ -28,13 +28,14 @@ const Banner = () => {
       <motion.h1 initial={{scale:0}} animate={{scale:1,
     transition:
     {duration:4}
-    }} className="text-5xl font-bold">Remote <motion.span animate={{
+    }} className="text-5xl font-bold">The Easiest Way To Get <motion.span animate={{
         color:['#eab294','#c7ea94','#94eae6','#c494ea'],
         transition:{duration:2,repeat:Infinity}
-    }}>Job</motion.span> Offer!</motion.h1>
+    }}>Your New</motion.span> JOB!</motion.h1>
       <p className="py-6">
-        Provident cupiditate voluptatem et in. Quaerat fugiat ut assumenda excepturi exercitationem
-        quasi. In deleniti eaque aut repudiandae et a id nisi.
+       Each month, more than 3 million job seekers turn to
+website in their search for work, making over 140,000
+applications every single day.
       </p>
       <button className="btn btn-primary">Get Started</button>
     </div>

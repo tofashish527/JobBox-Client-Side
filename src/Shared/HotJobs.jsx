@@ -11,7 +11,7 @@ const HotJobs = () => {
       .then(data => setJobs(data));
   }, []);
     return (
-        <div className='grid grid-cols-1 lg:grid-cols-3 md:grid-cols-2 gap-3'>
+        <div className='grid bg-base-200 mx-auto px-12 pb-10 grid-cols-1 lg:grid-cols-3 md:grid-cols-2 gap-5'>
             {jobs.map(job=><Jobcard key={job._id}job={job}></Jobcard>)}
         </div>
     );

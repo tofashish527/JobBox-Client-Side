@@ -8,7 +8,7 @@ const Home = () => {
         <div>
             <Banner></Banner>
             <div>
-                <p className='text-center text-4xl font-bold mb-5 mt-5'>Hot Job Offers!!!</p>
+                <p className='text-center text-4xl bg-base-200 font-bold pb-5 pt-5'>Hot Job Offers!!!</p>
                 <HotJobs></HotJobs>
             </div> 
         </div>
